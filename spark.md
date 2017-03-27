@@ -90,9 +90,6 @@ computed “from scratch.”
 
 partitioning lets users control the layout of pair RDDs across nodes, Choosing the right partitioning for a distributed dataset is similar to choosing the right data structure for a local one—in both cases, data layout can greatly affect performance.
 
-
-
-
 ## Persistence
 
 The first time the persisted RDD is computed in an action, it will be kept in memory on the nodes, RDD.unpersist() will manually remove the data from cache.
@@ -103,21 +100,23 @@ StorageLevel: provide different trade-offs between memory usage and CPU efficien
 
 In Python, stored objects will always be serialized with the Pickle library, so it does not matter whether you choose a serialized level.
 
-	SER: whether the data is serialized in memory, data un-serialization consumes CPU time, on the other hand, serialized data saves space
-	DISK : whether to spill partitions that don't fit in memory to disk instead of recomputing them on the fly each time they're needed.
-	_* : replicate each partition on * cluster nodes
+```shell
+SER: whether the data is serialized in memory, data un-serialization consumes CPU time, on the other hand, serialized data saves space
+DISK : whether to spill partitions that don't fit in memory to disk instead of recomputing them on the fly each time they're needed.
+_* : replicate each partition on * cluster nodes
 
-	**MEMORY_ONLY
-	MEMORY_ONLY_SER
-	**MEMORY_AND_DISK
-	MEMORY_AND_DISK_SER
+**MEMORY_ONLY
+MEMORY_ONLY_SER
+**MEMORY_AND_DISK
+MEMORY_AND_DISK_SER
 
-	MEMORY_ONLY_2
-	MEMORY_AND_DISK_2
-	etc
+MEMORY_ONLY_2
+MEMORY_AND_DISK_2
+etc
 
-	OFF_HEAP : delegate all the caching jobs to other distributed in-memory
-	file system, such as apache ignite or tachyon, 
+OFF_HEAP : delegate all the caching jobs to other distributed in-memory
+file system, such as apache ignite or tachyon,
+```
 
 StorageLevel Strategy:
 
@@ -322,7 +321,3 @@ spark.eventLog.dir
 
 
 ```
-
-
-
-
