@@ -1,13 +1,16 @@
 # Zookeeper Notes
 
+bin/zkCli.sh -server 10.7.65.151:2181,10.7.65.152:2181,10.7.65.153:2181
+bin/zkCli.sh -server 10.7.65.151:2181,10.7.65.152:2181,10.7.65.153:2181/test
+
 ## Basics
 
 +   znodes : ZooKeeper data nodes which organized in hierarchical structure
 +   ephemeral nodes : exists as long as the session that created the znode is active, can NOT have children
-+   ensemble : a set of zookeeper cluster
++   ensemble : a set of zookeeper servers
 +   read-dominant
 +   name space : a sequence of path elements separated by a slash (/),Every node in ZooKeeper's name space is identified by a path
-+   watch : A watch is set by client to be attached with one znode, it will be triggered and removed when the znode changes
++   watch : A watch solves problem for clients which have to poll constantly to acquire some message. It is set by client to be attached with one znode,the watch will be triggered and removed when the znode changes
     *   One-time trigger
     *   Sent to the client : a client will never see a change for which it has set a watch until it first sees the watch event
     *   Data watches and child watches
@@ -18,7 +21,7 @@
     *   Child event
     *   Child Remove event
     *   Data Remove event
-+   quorum : A replicated group of servers in the same application
++   quorum : minimum number of servers that have to store a client’s data before telling the client it is safely stored
 +   quotas : tunable resources assigned to user.
 +   time
     *   zxid : zookeeper transaction id
@@ -61,10 +64,52 @@
 </dependency>
 ```
 
+```java
+/**
+ * We need to handle both ConnectionLossException and InterruptedException
+ * when creating znode
+ */
+
+try{
+    ...
+    }catch(ConnectionLossException){
+        ...
+        }catch(InterruptedException){
+            ...
+        }
+```
+
+### Async Callback
+
+```java
+/**
+ *  All synchronous calls in ZooKeeper have corresponding asynchronous calls,
+ *  these calls dont't throw any KeeperException
+ *
+ *  @Param rc return code
+ *  @Param ctx context object passed to the specific AsyncCallback call
+ *  @Param stat Stat of the znode?
+ */
+
+Interface AsyncCallback
+void processResult(int rc, ... , Object ctx, ... , Stat stat)
+
+
+
+
+```
+
+
+
 
 ## Production Optimizations
 
 +   A dedicated transaction log directory : By default transaction logs are put in $dataDir, change $dataLogDir to use for the transaction logs
+
+
+## ACLs
+
++   ZooKeeper provides per-znode ACLs with a pluggable authentication method
 
 
 ## Cluster Setup
@@ -96,3 +141,4 @@ echo 3 > /data/zookeeper/myid
 #All 3 servers set,then startup service
 bin/zkServer.sh start
 ```
+

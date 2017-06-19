@@ -321,3 +321,36 @@ spark.eventLog.dir
 
 
 ```
+
+
+
+## Spark Internals
+
++	Master
++	Driver
++	Worker
+	*	ExecutorRunner
++	ExecutorBackend
+	*	CoarsedGrainedExecutorBackend
+		-	Executor
+			+	Task
+
++	RDD dependency
+	*	NarrowDependency - each partition of the parent RDD is used by at most one partition of the child RDD(只有前后两个 RDD 的 partition 个数以及 partitioner 都一样，才会出现 NarrowDependency)
+		-	OneToOneDependency (1:1)
+		-	NarrowDependency(N:1)
+		-	NarrowDependency(N:N) - too few instance
+		-	RangeDependency (只在 UnionRDD 中使用)
+	*	ShuffleDependency
+
++	Pipeline
+	*	Data only get computed when needed
+	*	Data get "shuffled" to the location where computation happens
+
+### 名词解释
+
+RDD
+Transformation
+Action
+Pipeline
+
